@@ -1,4 +1,11 @@
 
+export const utilService = {
+    makeId,
+    makeLorem,
+    getRandomIntInclusive,
+    loadFromStorage,
+    saveToStorage
+}
 
 export function makeId(length = 6) {
     var txt = ''

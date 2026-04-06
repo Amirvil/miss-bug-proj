@@ -15,19 +15,19 @@ export const bugService = {
 
 function query(filterBy) {
     return storageService.query(STORAGE_KEY)
-    .then(bugs => {
+        .then(bugs => {
 
-        if (filterBy.txt) {
-            const regExp = new RegExp(filterBy.txt, 'i')
-            bugs = bugs.filter(bug => regExp.test(bug.title))
-        }
+            if (filterBy.txt) {
+                const regExp = new RegExp(filterBy.txt, 'i')
+                bugs = bugs.filter(bug => regExp.test(bug.title))
+            }
 
-        if (filterBy.minSeverity) {
-            bugs = bugs.filter(bug => bug.severity >= filterBy.minSeverity)
-        }
+            if (filterBy.minSeverity) {
+                bugs = bugs.filter(bug => bug.severity >= filterBy.minSeverity)
+            }
 
-        return bugs
-    })
+            return bugs
+        })
 }
 
 function getById(bugId) {
@@ -48,30 +48,38 @@ function save(bug) {
 
 function _createBugs() {
     let bugs = utilService.loadFromStorage(STORAGE_KEY)
-    if (bugs && bugs.length > 0) return 
+    if (bugs && bugs.length > 0) return
 
     bugs = [
         {
+            _id: "1NF1N1T3",
             title: "Infinite Loop Detected",
+            description,
             severity: 4,
-            _id: "1NF1N1T3"
+            createdAt
+
         },
         {
+            _id: "K3YB0RD",
             title: "Keyboard Not Found",
+            description,
             severity: 3,
-            _id: "K3YB0RD"
+            createdAt
         },
         {
+            _id: "C0FF33",
             title: "404 Coffee Not Found",
+            description,
             severity: 2,
-            _id: "C0FF33"
+            createdAt
         },
         {
+            _id: "G0053",
             title: "Unexpected Response",
+            description,
             severity: 1,
-            _id: "G0053"
-        }
-    ]
+            createdAt
+        }]
     utilService.saveToStorage(STORAGE_KEY, bugs)
 }
 
