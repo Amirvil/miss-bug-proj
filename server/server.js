@@ -4,24 +4,33 @@ const app = express()
 
 const bugs = [
     {
+        _id: "1NF1N1T3",
         title: "Infinite Loop Detected",
+        description,
         severity: 4,
-        _id: "1NF1N1T3"
+        createdAt
+
     },
     {
+        _id: "K3YB0RD",
         title: "Keyboard Not Found",
+        description,
         severity: 3,
-        _id: "K3YB0RD"
+        createdAt
     },
     {
+        _id: "C0FF33",
         title: "404 Coffee Not Found",
+        description,
         severity: 2,
-        _id: "C0FF33"
+        createdAt
     },
     {
+        _id: "G0053",
         title: "Unexpected Response",
+        description,
         severity: 1,
-        _id: "G0053"
+        createdAt
     }
 ]
 
