@@ -1,14 +1,16 @@
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
 
 import { bugService } from '../services/bug.service.local.js'
 import { showSuccessMsg, showErrorMsg } from '../services/event-bus.service.js'
 
 import { BugFilter } from '../cmps/BugFilter.jsx'
 import { BugList } from '../cmps/BugList.jsx'
+import { debounce } from '../services/util.service.local.js'
 
 export function BugIndex() {
     const [bugs, setBugs] = useState(null)
     const [filterBy, setFilterBy] = useState(bugService.getDefaultFilter())
+    const debouncedSetFilterBy = useRef(debounce(setFilterBy, 500)).current
 
     useEffect(loadBugs, [filterBy])
 
@@ -74,7 +76,7 @@ export function BugIndex() {
 
         <BugFilter
             filterBy={filterBy}
-            onSetFilterBy={onSetFilterBy} />
+            onSetFilterBy={debouncedSetFilterBy} />
 
         <BugList
             bugs={bugs}
