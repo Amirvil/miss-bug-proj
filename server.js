@@ -1,11 +1,11 @@
 import express from 'express'
-import cors from 'cors'
+import cookieParser from 'cookie-parser'
+import path from 'path'
 
-import { bugService } from '../services/bug.service.js'
+import { bugService } from './services/bug.service.js'
 
 const app = express()
-app.use(cors())
-
+app.use(cookieParser())
 app.use(express.static('public'))
 
 app.get('/api/bug', (req, res) => {
@@ -42,6 +42,18 @@ app.get('/api/bug/save', (req, res) => {
 app.get('/api/bug/:bugId', (req, res) => {
     const { bugId } = req.params
 
+    let visitedBugs = req.cookies.visitedBugs || []
+    if (!visitedBugs.includes(bugId)) {
+        if (visitedBugs.length >= 3) {
+            console.log('User blocked: limit reached')
+            return res.status(401).send('Wait for a bit')
+        }
+        visitedBugs.push(bugId)
+    }
+
+    res.cookie('visitedBugs', visitedBugs, { maxAge: 7000 })
+    console.log(`User visited the following bugs: [${visitedBugs.join(', ')}]`)
+
     bugService.getById(bugId)
         .then(bug => res.send(bug))
         .catch(err => {
@@ -59,4 +71,8 @@ app.get('/api/bug/:bugId/remove', (req, res) => {
         })
 })
 
-app.listen(3030, () => console.log('Server ready at port http://127.0.0.1:3030'))
+app.listen(5501, () => console.log('Server ready at port http://127.0.0.1:5501'))
+
+app.get('{*splat}', (req, res) => {
+    res.sendFile(path.resolve('public/index.html'))
+})

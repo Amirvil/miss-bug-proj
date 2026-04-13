@@ -1,5 +1,5 @@
 
-const BASE_URL = 'http://127.0.0.1:3030/api/bug/'
+const BASE_URL = '/api/bug'
 
 export const bugService = {
     query,
@@ -20,24 +20,24 @@ function query(filterBy = {}) {
                 bugs = bugs.filter(bug => regExp.test(bug.title) || regExp.test(bug.description))
             }
 
-            if (filterBy.severity) {
-                bugs = bugs.filter(bug => bug.severity >= filterBy.severity)
+            if (filterBy.minSeverity) {
+                bugs = bugs.filter(bug => bug.severity >= filterBy.minSeverity)
             }
             return bugs
         })
 }
 
 function getById(bugId) {
-    return axios.get(BASE_URL + bugId)
+    return axios.get(BASE_URL + '/' + bugId)
         .then(res => res.data)
 }
 
 function remove(bugId) {
-    return axios.get(BASE_URL + bugId + '/remove').then(res => res.data)
+    return axios.get(BASE_URL + '/' + bugId + '/remove').then(res => res.data)
 }
 
 function save(bug) {
-    const url = BASE_URL + 'save'
+    const url = BASE_URL + '/save'
     let queryParams = `?title=${bug.title}&description=${bug.description}&severity=${bug.severity}`
     if (bug._id) queryParams += `&_id=${bug._id}`
     return axios.get(url + queryParams)
