@@ -10,7 +10,7 @@ import { debounce } from '../services/util.service.local.js'
 export function BugIndex() {
     const [bugs, setBugs] = useState(null)
     const [filterBy, setFilterBy] = useState(bugService.getDefaultFilter())
-    const debouncedSetFilterBy = useRef(debounce(setFilterBy, 500)).current
+    const debouncedOnSetFilterBy = useRef(debounce(setFilterBy, 500)).current
 
     useEffect(loadBugs, [filterBy])
 
@@ -76,7 +76,7 @@ export function BugIndex() {
 
         <BugFilter
             filterBy={filterBy}
-            onSetFilterBy={debouncedSetFilterBy} />
+            onSetFilterBy={debouncedOnSetFilterBy} />
 
         <BugList
             bugs={bugs}
