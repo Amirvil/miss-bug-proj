@@ -44,3 +44,14 @@ export function saveToStorage(keyDB, val) {
     const valStr = JSON.stringify(val)
     localStorage.setItem(keyDB, valStr)
 }
+
+export function debounce(fn, delay) {
+	let timer
+	return (...args) => {
+		// clear any pre-existing timer
+		if (timer) clearTimeout(timer)
+
+		// call the function if time expires
+		timer = setTimeout(() => fn(...args), delay)
+	}
+}
