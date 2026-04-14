@@ -24,6 +24,12 @@ function query(filterBy = {}) {
         filteredBugs = filteredBugs.filter(bug => bug.severity >= filterBy.minSeverity)
     }
 
+    if (filterBy.labels && filterBy.labels.length) {
+        filteredBugs = filteredBugs.filter(bug => 
+            bug.labels && filterBy.labels.some(label => bug.labels.includes(label))
+        )
+    }
+
     return Promise.resolve(filteredBugs)
 }
 

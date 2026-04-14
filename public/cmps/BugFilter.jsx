@@ -12,7 +12,6 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
     }, [filterByToEdit])
 
     useEffect(() => {
-        // Load the labels when the component mounts
         bugService.getLabels()
             .then(labels => setLabels(labels))
             .catch(err => console.log('Err:', err))
@@ -20,21 +19,25 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
 
     function handleChange({ target }) {
         const field = target.name
-        let value = target.value
+    let value = target.value
 
-        switch (target.type) {
-            case 'number':
-            case 'range':
-                value = +value
-                break
-
-            case 'checkbox':
-                value = target.checked
-                break
+    if (target.type === 'number' || target.type === 'range') {
+        value = +value
+    } else if (target.type === 'checkbox') {
+        if (labels.includes(field)) {
+            const currentLabels = filterByToEdit.labels || []
+            value = target.checked 
+                ? [...currentLabels, field]
+                : currentLabels.filter(l => l !== field)
+            
+            setFilterByToEdit(prev => ({ ...prev, labels: value }))
+            return
         }
-
-        setFilterByToEdit(prevFilter => ({ ...prevFilter, [field]: value }))
+        value = target.checked
     }
+
+    setFilterByToEdit(prevFilter => ({ ...prevFilter, [field]: value }))
+}
 
     function onSubmitFilter(ev) {
         ev.preventDefault()
@@ -52,13 +55,15 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
             <label htmlFor="minSeverity">Min Severity: </label>
             <input value={minSeverity || ''} onChange={handleChange} type="number" placeholder="By Min Severity" id="minSeverity" name="minSeverity" />
 
-            <select name="labels" onChange={handleChange}>
-                <option value="">All Labels</option>
-                {labels.map(label => (
-                    <option key={label} value={label}>{label}</option>
-                ))}
-            </select>
-
+            <label htmlFor="label">Label: </label>
+            {labels.map(label =>
+                <label key={label} className="tag">
+                    <input
+                        onChange={handleChange}
+                        name={label}
+                        type="checkbox" />
+                    <span>{label}</span>
+                </label>)}
         </form>
 
     )

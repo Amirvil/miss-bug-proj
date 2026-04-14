@@ -14,6 +14,7 @@ app.get('/api/bug', (req, res) => {
     const filterBy = {
         txt: req.query.txt || '',
         minSeverity: +req.query.minSeverity || 0,
+        labels: req.query.labels || ''
     }
     bugService.query(filterBy)
         .then(bugs => res.send(bugs))
