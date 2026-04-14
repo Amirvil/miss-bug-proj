@@ -38,7 +38,13 @@ function getEmptyBug() {
 }
 
 function getDefaultFilter() {
-    return { txt: '', severity: '' }
+    return { 
+        txt: '', 
+        minSeverity: '', 
+        labels: [], 
+        sortBy: 'title', 
+        sortDir: 1       
+    }
 }
 
 function getLabels() {

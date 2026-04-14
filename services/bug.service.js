@@ -25,9 +25,24 @@ function query(filterBy = {}) {
     }
 
     if (filterBy.labels && filterBy.labels.length) {
-        filteredBugs = filteredBugs.filter(bug => 
+        filteredBugs = filteredBugs.filter(bug =>
             bug.labels && filterBy.labels.some(label => bug.labels.includes(label))
         )
+    }
+
+    if (filterBy.sortBy) {
+        const { sortBy, sortDir = 1 } = filterBy
+
+        filteredBugs.sort((b1, b2) => {
+            let val1 = b1[sortBy]
+            let val2 = b2[sortBy]
+
+            if (typeof val1 === 'string') {
+                return val1.localeCompare(val2) * sortDir
+            }
+
+            return (val1 - val2) * sortDir
+        })
     }
 
     return Promise.resolve(filteredBugs)
