@@ -7,13 +7,13 @@ import { bugService } from './services/bug.service.js'
 const app = express()
 app.use(cookieParser())
 app.use(express.static('public'))
+app.set('query parser', 'extended')
+app.use(express.json())
 
 app.get('/api/bug', (req, res) => {
     const filterBy = {
         txt: req.query.txt || '',
         minSeverity: +req.query.minSeverity || 0,
-        paginationOn: req.query.paginationOn === 'true',
-        pageIdx: req.query.pageIdx || 0,
     }
     bugService.query(filterBy)
         .then(bugs => res.send(bugs))
@@ -22,28 +22,26 @@ app.get('/api/bug', (req, res) => {
         })
 })
 
-app.get('/api/bug/save', (req, res) => {
-    const { title, description, severity, _id } = req.query
-    const bugToSave = {
-        title,
-        description,
-        severity: +severity,
+
+function parseQueryParams(queryParams) {
+    const filterBy = {
+        txt: queryParams.txt || '',
+        minSeverity: +queryParams.minSeverity || 0,
+        labels: queryParams.labels || [],
     }
 
-    // Only add the _id if we are performing an UPDATE
-    if (_id) bugToSave._id = _id
-
-    // Clean up empty fields
-    for (const key in bugToSave) {
-        if (bugToSave[key] === undefined) delete bugToSave[key]
+    const sortBy = {
+        sortField: queryParams.sortField || '',
+        sortDir: +queryParams.sortDir || 1,
     }
 
-    bugService.save(bugToSave)
-        .then(savedBug => res.send(savedBug))
-        .catch(err => {
-            res.status(400).send('Cannot save bug')
-        })
-})
+    const pagination = {
+        pageIdx: queryParams.pageIdx !== undefined ? +queryParams.pageIdx || 0 : queryParams.pageIdx,
+        pageSize: +queryParams.pageSize || 3,
+    }
+
+    return { filterBy, sortBy, pagination }
+}
 
 app.get('/api/bug/:bugId', (req, res) => {
     const { bugId } = req.params
@@ -67,18 +65,63 @@ app.get('/api/bug/:bugId', (req, res) => {
         })
 })
 
-app.get('/api/bug/:bugId/remove', (req, res) => {
-    const { bugId } = req.params
+app.post('/api/bug', (req, res) => {
+    const { title, description, severity, _id } = req.body
+    const bugToSave = {
+        title,
+        description,
+        severity: +severity,
+    }
 
-    bugService.remove(bugId)
-        .then(() => res.send('Removed!'))
+    // Only add the _id if we are performing an UPDATE
+    if (_id) bugToSave._id = _id
+
+    // Clean up empty fields
+    for (const key in bugToSave) {
+        if (bugToSave[key] === undefined) delete bugToSave[key]
+    }
+
+    bugService.save(bugToSave)
+        .then(savedBug => res.send(savedBug))
         .catch(err => {
-            res.status(400).send('Cannot get bug')
+            res.status(400).send('Cannot save bug')
         })
+})
+
+app.put('/api/bug/:bugId', (req, res) => {
+	const { title, description, severity, _id } = req.body
+
+    if ( !_id || !title || severity === undefined) return res.status(400).send('Missing required fields')
+    const bug = {
+		_id,
+		title,
+		description,
+		severity: +severity,
+	}
+
+	bugService.save(bug)
+		.then(savedBug => {
+			res.send(savedBug)
+		})
+		.catch(err => {
+			res.status(400).send('Cannot save bug')
+		})
+})
+
+app.delete('/api/bug/:bugId', (req, res) => {
+	const { bugId } = req.params
+
+	bugService.remove(bugId)
+		.then(() => {
+			res.send('Removed!')
+		})
+		.catch(err => {
+			res.status(400).send('Cannot get bug')
+		})
 })
 
 app.listen(5501, () => console.log('Server ready at port http://127.0.0.1:5501'))
 
-app.get('{*splat}', (req, res) => {
-    res.sendFile(path.resolve('public/index.html'))
+app.get('*splat', (req, res) => {
+    res.sendFile(path.resolve('public', 'index.html'))
 })

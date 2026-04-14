@@ -11,25 +11,25 @@ export const bugService = {
 }
 
 function query(filterBy = {}) {
-    // console.log('filterBy service:', filterBy)
     return axios.get(BASE_URL, { params: filterBy })
         .then(res => res.data)
 }
 
 function getById(bugId) {
-    return axios.get(BASE_URL + '/' + bugId)
+    return axios.get(BASE_URL + bugId)
         .then(res => res.data)
 }
 
 function remove(bugId) {
-    return axios.get(BASE_URL + '/' + bugId + '/remove').then(res => res.data)
+    return axios.delete(BASE_URL + bugId)
 }
 
 function save(bug) {
-    const url = BASE_URL + '/save'
-    let queryParams = `?title=${bug.title}&description=${bug.description}&severity=${bug.severity}`
-    if (bug._id) queryParams += `&_id=${bug._id}`
-    return axios.get(url + queryParams)
+    const method = bug._id ? 'put' : 'post'
+    const bugId = bug._id || ''
+
+    return axios[method](BASE_URL + bugId, bug)
+        .then(res => res.data)
 }
 
 function getEmptyBug() {
@@ -39,4 +39,3 @@ function getEmptyBug() {
 function getDefaultFilter() {
     return { txt: '', severity: '' }
 }
-

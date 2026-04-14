@@ -1,42 +1,34 @@
 [
-    {
-        "title": "Bug 1775633038908",
-        "description": "baba",
-        "severity": 3,
-        "_id": "dLbjV",
-        "createdAt": 1775633046610
-    },
-    {
-        "title": "Cannot find 404",
-        "description": "undefined",
-        "severity": 5,
-        "_id": "ox0v5",
-        "createdAt": 1775632863246
-    },
-    {
-        "_id": "nR7Tm",
-        "title": "asfdd",
-        "description": "1",
-        "severity": 5
-    },
-    {
-        "_id": "abcd",
-        "title": "Cannot save a Bug",
-        "description": "problem when clicking Save",
-        "severity": 4
-    },
-    {
-        "_id": "RJBVn",
-        "title": "shani",
-        "description": "shanbi",
-        "severity": 3,
-        "createdAt": 1694117417145
-    },
-    {
-        "_id": "KwJBH",
-        "title": "asdfsda",
-        "description": "asfsd",
-        "severity": 5,
-        "createdAt": 1694122856035
-    }
+  {
+    "title": "Having a realy bad day",
+    "description": "Things be going wrong!",
+    "severity": 4,
+    "_id": "5VMXD",
+    "createdAt": 1743066297952,
+    "labels": "['back', 'fixed']"
+  },
+  {
+    "title": "Having a bad day",
+    "description": "Things be going wrong!",
+    "severity": 4,
+    "_id": "72yVP",
+    "createdAt": 1743066119008,
+    "labels": "['front', 'fixed']"
+  },
+  {
+    "_id": "sTpWV",
+    "title": "gogo",
+    "description": "I'm am a description",
+    "severity": 3,
+    "createdAt": 1742489403172,
+    "labels": "['fixed']"
+  },
+  {
+    "_id": "RJBVn",
+    "title": "shani",
+    "description": "shanbi",
+    "severity": 2,
+    "createdAt": 1694117417145,
+    "labels": "['front', 'critical']"
+  }
 ]
