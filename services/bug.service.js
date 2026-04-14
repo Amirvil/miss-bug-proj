@@ -6,7 +6,8 @@ export const bugService = {
     query,
     getById,
     remove,
-    save
+    save,
+    getLabels
 }
 
 const bugs = utilService.readJsonFile('./data/bug.json')
@@ -22,7 +23,7 @@ function query(filterBy = {}) {
     if (filterBy.minSeverity) {
         filteredBugs = filteredBugs.filter(bug => bug.severity >= filterBy.minSeverity)
     }
-    
+
     return Promise.resolve(filteredBugs)
 }
 
@@ -60,5 +61,11 @@ function _saveBugsToFile() {
             resolve()
         })
     })
+}
+
+function getLabels() {
+    const labels = bugs.flatMap(bug => bug.labels || [])
+    const uniqueLabels = [...new Set(labels)]
+    return Promise.resolve(uniqueLabels)
 }
 

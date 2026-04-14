@@ -43,28 +43,6 @@ function parseQueryParams(queryParams) {
     return { filterBy, sortBy, pagination }
 }
 
-app.get('/api/bug/:bugId', (req, res) => {
-    const { bugId } = req.params
-
-    let visitedBugs = req.cookies.visitedBugs || []
-    if (!visitedBugs.includes(bugId)) {
-        if (visitedBugs.length >= 3) {
-            console.log('User blocked: limit reached')
-            return res.status(401).send('Wait for a bit')
-        }
-        visitedBugs.push(bugId)
-    }
-
-    res.cookie('visitedBugs', visitedBugs, { maxAge: 7000 })
-    console.log(`User visited the following bugs: [${visitedBugs.join(', ')}]`)
-
-    bugService.getById(bugId)
-        .then(bug => res.send(bug))
-        .catch(err => {
-            res.status(400).send('Cannot get bug')
-        })
-})
-
 app.post('/api/bug', (req, res) => {
     const { title, description, severity, _id } = req.body
     const bugToSave = {
@@ -118,6 +96,37 @@ app.delete('/api/bug/:bugId', (req, res) => {
 		.catch(err => {
 			res.status(400).send('Cannot get bug')
 		})
+})
+
+app.get('/api/bug/labels', (req, res) => {
+    bugService.getLabels()
+        .then(labels => res.send(labels))
+        .catch(err => {
+            console.error('Cannot get labels:', err)
+            res.status(400).send('Cannot get labels')
+        })
+})
+
+app.get('/api/bug/:bugId', (req, res) => {
+    const { bugId } = req.params
+
+    let visitedBugs = req.cookies.visitedBugs || []
+    if (!visitedBugs.includes(bugId)) {
+        if (visitedBugs.length >= 3) {
+            console.log('User blocked: limit reached')
+            return res.status(401).send('Wait for a bit')
+        }
+        visitedBugs.push(bugId)
+    }
+
+    res.cookie('visitedBugs', visitedBugs, { maxAge: 7000 })
+    console.log(`User visited the following bugs: [${visitedBugs.join(', ')}]`)
+
+    bugService.getById(bugId)
+        .then(bug => res.send(bug))
+        .catch(err => {
+            res.status(400).send('Cannot get bug')
+        })
 })
 
 app.listen(5501, () => console.log('Server ready at port http://127.0.0.1:5501'))
