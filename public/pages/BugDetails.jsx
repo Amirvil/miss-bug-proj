@@ -19,12 +19,18 @@ export function BugDetails() {
         <h2>Bug Details</h2>
         {!bug && <p className="loading">Loading....</p>}
         {
-            bug && 
+            bug &&
             <div>
                 <h3>{bug.title}</h3>
-                 
+
                 <p className="severity">Severity: <span>{bug.severity}</span></p>
-                <p className="description">Description: <span>{bug.description}</span></p>
+                <p className="description">Description:
+                    <span>{bug.description || 'No description provided'}</span>
+                </p>
+
+                <div className="labels">
+                    Labels: {(bug.labels && bug.labels.length) ? bug.labels.join(', ') : 'None'}
+                </div>
             </div>
         }
         <button><Link to="/bug">Back to List</Link></button>
