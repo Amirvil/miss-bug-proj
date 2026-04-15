@@ -23,3 +23,11 @@
     align-items: center;
     flex-wrap: wrap;
 }
+
+.pagination{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+    gap: 1.5em;
+}

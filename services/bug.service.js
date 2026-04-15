@@ -45,6 +45,12 @@ function query(filterBy = {}) {
         })
     }
 
+    const pageSize = 3
+    if (filterBy.pageIdx !== undefined) {
+        const startIdx = filterBy.pageIdx * pageSize
+        filteredBugs = filteredBugs.slice(startIdx, startIdx + pageSize)
+    }
+
     return Promise.resolve(filteredBugs)
 }
 

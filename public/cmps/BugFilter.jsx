@@ -44,6 +44,11 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
         onSetFilterBy(filterByToEdit)
     }
 
+    function onChangePage(diff) {
+        const nextPage = Math.max(0, (filterByToEdit.pageIdx || 0) + diff)
+        onSetFilterBy({ ...filterByToEdit, pageIdx: nextPage })
+    }
+
     const { txt, minSeverity, sortBy, sortDir } = filterByToEdit
     return (
         <section className="bug-filter">
@@ -98,6 +103,11 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
                     </label>
                 </div>
             </form>
+            <section className="pagination">
+                <button onClick={() => onChangePage(-1)}>Prev</button>
+                <span>{filterBy.pageIdx + 1}</span>
+                <button onClick={() => onChangePage(1)}>Next</button>
+            </section>
         </section>
     )
 }

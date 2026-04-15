@@ -16,7 +16,8 @@ app.get('/api/bug', (req, res) => {
         minSeverity: +req.query.minSeverity || 0,
         labels: req.query.labels || '',
         sortBy: req.query.sortBy || '',
-        sortDir: +req.query.sortDir || 1
+        sortDir: +req.query.sortDir || 1,
+        pageIdx: req.query.pageIdx !== undefined ? +req.query.pageIdx : undefined
     }
 
     bugService.query(filterBy)
