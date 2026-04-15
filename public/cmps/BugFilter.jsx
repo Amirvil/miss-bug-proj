@@ -48,24 +48,21 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
     return (
         <section className="bug-filter">
             <form onSubmit={onSubmitFilter}>
-                <h3>Filter & Sort</h3>
-
-                {/* Row 1: Search & Severity */}
-                <div className="filter-row main-filters">
-                    <div className="filter-group">
+                <div className="filter-group">
+                    <h3 className="filter-title">Filter: </h3>
+                    <div className="filter-txt">
                         <label htmlFor="txt">Search:</label>
                         <input value={txt} onChange={handleChange} type="text" name="txt" placeholder="Search bugs..." id="txt" />
                     </div>
 
-                    <div className="filter-group">
+                    <div className="filter-severity">
                         <label htmlFor="minSeverity">Severity:</label>
                         <input value={minSeverity || ''} onChange={handleChange} type="number" name="minSeverity" id="minSeverity" />
                     </div>
                 </div>
 
-                {/* Row 2: Labels */}
-                <div className="filter-row labels-row">
-                    <span className="row-label">Labels:</span>
+                <div className="labels-group">
+                    <h3 className="labels-title">Lables: </h3>
                     <div className="labels-container">
                         {labels.map(label => (
                             <label key={label} className="tag-checkbox">
@@ -80,31 +77,25 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
                     </div>
                 </div>
 
-                {/* Row 3: Sorting */}
-                <div className="filter-row sort-row">
-                    <div className="filter-group">
-                        <label htmlFor="sortBy">Sort by:</label>
-                        <select name="sortBy" id="sortBy" value={sortBy} onChange={handleChange}>
-                            <option value="title">Title</option>
-                            <option value="severity">Severity</option>
-                            <option value="createdAt">Date</option>
-                        </select>
-                    </div>
-
-                    <div className="filter-group">
-                        <label className="checkbox-ui">
-                            <input
-                                type="checkbox"
-                                name="sortDir"
-                                checked={sortDir === -1}
-                                onChange={(ev) => {
-                                    const value = ev.target.checked ? -1 : 1
-                                    setFilterByToEdit(prev => ({ ...prev, sortDir: value }))
-                                }}
-                            />
-                            <span>Descending</span>
-                        </label>
-                    </div>
+                <div className="sort-group">
+                    <h3 htmlFor="sortBy">Sort by: </h3>
+                    <select name="sortBy" id="sortBy" value={sortBy} onChange={handleChange}>
+                        <option value="title">Title</option>
+                        <option value="severity">Severity</option>
+                        <option value="createdAt">Date</option>
+                    </select>
+                    <label className="checkbox-ui">
+                        <input
+                            type="checkbox"
+                            name="sortDir"
+                            checked={sortDir === -1}
+                            onChange={(ev) => {
+                                const value = ev.target.checked ? -1 : 1
+                                setFilterByToEdit(prev => ({ ...prev, sortDir: value }))
+                            }}
+                        />
+                        <span>Descending</span>
+                    </label>
                 </div>
             </form>
         </section>

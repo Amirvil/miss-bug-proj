@@ -1,19 +1,25 @@
 .bug-filter {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 1.5em;
 
     padding-block-end: 1em;
     border-block-end: 1px solid lightgray;
     margin-block-start: 1em;
 }
 
-.bug-filter p {
-    margin-inline-end: auto;
-    font-size: 1.1em;
-    font-weight: bold;
+.bug-filter h3 {
+    min-width: 100px;
+    font-size: 1rem;
+    margin: 0;
 }
 
 :is(.bug-filter) label, input {
     margin-inline-start: 1em;
 }
 
+.filter-group, .labels-group, .sort-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
