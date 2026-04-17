@@ -4,14 +4,22 @@
         "description": "Bob Dylan",
         "severity": 4,
         "_id": "KMeG1",
-        "createdAt": 1776235034274
+        "createdAt": 1776235034274,
+        "creator": {
+            "_id": "u101",
+            "fullname": "Puki Ja"
+        }
     },
     {
         "title": "Norwegian Wood",
         "description": "The Beatles",
         "severity": 2,
         "_id": "WJU3J",
-        "createdAt": 1776234825726
+        "createdAt": 1776234825726,
+        "creator": {
+            "_id": "u101",
+            "fullname": "Puki Ja"
+        }
     },
     {
         "_id": "sTpWV",
@@ -19,6 +27,10 @@
         "description": "I'm am a description",
         "severity": 3,
         "createdAt": 1742489403172,
+        "creator": {
+            "_id": "u101",
+            "fullname": "Puki Ja"
+        },
         "labels": [
             "fixed"
         ]
@@ -29,6 +41,10 @@
         "severity": 4,
         "_id": "72yVP",
         "createdAt": 1743066119008,
+        "creator": {
+            "_id": "u102",
+            "fullname": "Muki Ba"
+        },
         "labels": [
             "front",
             "fixed"
@@ -40,6 +56,10 @@
         "severity": 4,
         "_id": "5VMXD",
         "createdAt": 1743066297952,
+        "creator": {
+            "_id": "u102",
+            "fullname": "Muki Ba"
+        },
         "labels": [
             "back",
             "fixed"
@@ -50,7 +70,11 @@
         "description": "Daft Punk",
         "severity": 5,
         "_id": "eiMSR",
-        "createdAt": 1776234753542
+        "createdAt": 1776234753542,
+        "creator": {
+            "_id": "u102",
+            "fullname": "Muki Ba"
+        }
     },
     {
         "_id": "RJBVn",
@@ -58,6 +82,10 @@
         "description": "shanbi",
         "severity": 2,
         "createdAt": 1694117417145,
+        "creator": {
+            "_id": "u102",
+            "fullname": "Muki Ba"
+        },
         "labels": [
             "front",
             "critical"
