@@ -49,7 +49,7 @@ export function BugFilter({ filterBy, onSetFilterBy }) {
         onSetFilterBy({ ...filterByToEdit, pageIdx: nextPage })
     }
 
-    const { txt, minSeverity, sortBy, sortDir } = filterByToEdit
+    const { txt, minSeverity, sortBy, sortDir, pageIdx = 0 } = filterByToEdit
     return (
         <section className="bug-filter">
             <form onSubmit={onSubmitFilter}>
