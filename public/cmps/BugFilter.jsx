@@ -1,4 +1,4 @@
-import { bugService } from "../services/bug.service.local.js"
+import { bugService } from "../services/bug.service.js"
 
 const { useState, useEffect } = React
 
