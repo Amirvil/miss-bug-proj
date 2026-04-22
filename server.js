@@ -27,6 +27,7 @@ app.get('/api/bug', (req, res) => {
     bugService.query(filterBy)
         .then(bugs => res.send(bugs))
         .catch(err => {
+            loggerService.error('Cannot get bugs', err)
             res.status(400).send('Cannot get bugs')
         })
 })
@@ -128,23 +129,52 @@ app.post('/api/auth/login', (req, res) => {
 
 app.post('/api/auth/signup', (req, res) => {
     const credentials = req.body
+    console.log('1. Signup request received')
 
     userService.add(credentials)
         .then(user => {
-            if (user) {
+            console.log('2. User added to file')
+
+            try {
                 const loginToken = authService.getLoginToken(user)
+                console.log('3. Token generated successfully')
                 res.cookie('loginToken', loginToken)
                 res.send(user)
-            } else {
-                res.status(400).send('Cannot signup')
+            } catch (err) {
+                console.error('CRASH in Token Generation:', err)
+                res.status(500).send('Token error')
             }
         })
-        .catch(err => res.status(400).send('Username taken.'))
+        .catch(err => {
+            console.error('4. Signup failed in service:', err)
+            res.status(400).send('Username taken.')
+        })
 })
 
 app.post('/api/auth/logout', (req, res) => {
     res.clearCookie('loginToken')
     res.send('logged-out!')
+})
+
+// User API
+app.get('/api/user', (req, res) => {
+    userService.query()
+        .then(users => res.send(users))
+        .catch(err => {
+            loggerService.error('Cannot load users', err)
+            res.status(400).send('Cannot load users')
+        })
+})
+
+app.get('/api/user/:userId', (req, res) => {
+    const { userId } = req.params
+
+    userService.getById(userId)
+        .then(user => res.send(user))
+        .catch(err => {
+            loggerService.error('Cannot load user', err)
+            res.status(400).send('Cannot load user')
+        })
 })
 
 app.listen(5501, () => console.log('Server ready at port http://127.0.0.1:5501'))

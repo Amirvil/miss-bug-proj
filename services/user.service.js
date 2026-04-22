@@ -20,16 +20,16 @@ function getById(userId) {
 	var user = users.find(user => user._id === userId)
 	if (!user) return Promise.reject('User not found!')
 
-    user = { ...user }
-    delete user.password
+	user = { ...user }
+	delete user.password
 
 	return Promise.resolve(user)
 }
 
 function getByUsername(username) {
-    // You might want to remove the password validation for dev
+	// You might want to remove the password validation for dev
 	var user = users.find(user => user.username === username)
-    return Promise.resolve(user)
+	return Promise.resolve(user)
 }
 
 function remove(userId) {
@@ -38,22 +38,22 @@ function remove(userId) {
 }
 
 function add(user) {
-    
-    return getByUsername(user.username) // Check if username exists...
-        .then(existingUser => {
-            if (existingUser) return Promise.reject('Username taken')
 
-            user._id = utilService.makeId()
-            // Later, we will call the authService here to encrypt the password
-            users.push(user)
-        
-            return _saveUsersToFile()
-                .then(() => {
-                    user = { ... user }
-                    delete user.password
-                    return user
-                })
-        })
+	return getByUsername(user.username) // Check if username exists...
+		.then(existingUser => {
+			if (existingUser) return Promise.reject('Username taken')
+
+			user._id = utilService.makeId()
+			// Later, we will call the authService here to encrypt the password
+			users.push(user)
+
+			return _saveUsersToFile()
+				.then(() => {
+					user = { ...user }
+					delete user.password
+					return user
+				})
+		})
 }
 
 function _saveUsersToFile() {
@@ -61,7 +61,8 @@ function _saveUsersToFile() {
 		const usersStr = JSON.stringify(users, null, 2)
 		fs.writeFile('./data/user.json', usersStr, err => {
 			if (err) {
-				return console.log(err)
+				console.log('Error writing to file:', err)
+				return reject(err)
 			}
 			resolve()
 		})
