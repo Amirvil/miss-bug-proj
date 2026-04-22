@@ -30,6 +30,10 @@ function query(filterBy = {}) {
         )
     }
 
+    if (filterBy.creatorId) {
+        filteredBugs = filteredBugs.filter(bug => bug.creator._id === filterBy.creatorId)
+    }
+
     if (filterBy.sortBy) {
         const { sortBy, sortDir = 1 } = filterBy
 

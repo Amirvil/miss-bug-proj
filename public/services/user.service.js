@@ -3,7 +3,8 @@ const BASE_URL = '/api/user/'
 export const userService = {
     query,
     getById,
-    getEmptyCredentials
+    getEmptyCredentials,
+    remove
 }
 
 function query() {
@@ -22,4 +23,9 @@ function getEmptyCredentials() {
         password: '',
         fullname: ''
     }
+}
+
+function remove(userId) {
+    return axios.delete(`/api/user/${userId}`)
+        .then(res => res.data)
 }

@@ -35,6 +35,9 @@ export function AppHeader({ loggedinUser, setLoggedinUser }) {
                         <button onClick={onLogout}>logout</button>
                     </div>
             }
+            {loggedinUser && loggedinUser.isAdmin && (
+                <NavLink to="/user">User Management</NavLink>
+            )}
         </nav>
     </header>
 }

@@ -21,7 +21,8 @@ app.get('/api/bug', (req, res) => {
         labels: req.query.labels || '',
         sortBy: req.query.sortBy || '',
         sortDir: +req.query.sortDir || 1,
-        pageIdx: req.query.pageIdx !== undefined ? +req.query.pageIdx : undefined
+        pageIdx: req.query.pageIdx !== undefined ? +req.query.pageIdx : undefined,
+        creatorId: req.query.creatorId || ''
     }
 
     bugService.query(filterBy)
@@ -64,6 +65,9 @@ app.get('/api/bug/:bugId', (req, res) => {
 })
 
 app.post('/api/bug', (req, res) => {
+    const loggedinUser = authService.validateToken(req.cookies.loginToken)
+    if (!loggedinUser) return res.status(401).send('Not logged in')
+
     const { title, description, severity, labels } = req.body
     if (!title || severity === undefined) return res.status(400).send('Missing required fields')
     const bugToSave = {
@@ -71,6 +75,10 @@ app.post('/api/bug', (req, res) => {
         description,
         severity: +severity || 1,
         labels: labels || [],
+        creator: {
+            _id: loggedinUser._id,
+            fullname: loggedinUser.fullname
+        }
     }
 
     bugService.save(bugToSave)
@@ -81,35 +89,54 @@ app.post('/api/bug', (req, res) => {
 })
 
 app.put('/api/bug/:bugId', (req, res) => {
-    const { title, description, severity, labels, _id } = req.body
+    const loggedinUser = authService.validateToken(req.cookies.loginToken)
+    if (!loggedinUser) return res.status(401).send('Not authenticated')
 
-    if (!_id || !title || severity === undefined) return res.status(400).send('Missing required fields')
-    const bug = {
-        _id,
-        title,
-        description,
-        severity: +severity,
-        labels: labels || [],
-    }
+    const { bugId } = req.params
+    const bugToSave = req.body
 
-    bugService.save(bug)
-        .then(savedBug => {
-            res.send(savedBug)
+    bugService.getById(bugId)
+        .then(bug => {
+            if (bug.creator._id !== loggedinUser._id && !loggedinUser.isAdmin) {
+                return Promise.reject('Not authorized: You can only edit your own bugs')
+            }
+            return bugService.save(bugToSave)
         })
+        .then(savedBug => res.send(savedBug))
         .catch(err => {
-            res.status(400).send('Cannot save bug')
+            console.log('Error:', err)
+            // If the error is our 'Not authorized' string, send 403
+            if (err === 'Not authorized') {
+                return res.status(403).send(err)
+            }
+            res.status(400).send(err || 'Cannot edit bug')
         })
 })
 
 app.delete('/api/bug/:bugId', (req, res) => {
+    const loggedinUser = authService.validateToken(req.cookies.loginToken)
+    if (!loggedinUser) return res.status(401).send('Not authenticated')
     const { bugId } = req.params
 
-    bugService.remove(bugId)
-        .then(() => {
-            res.send('Removed!')
+    bugService.getById(bugId)
+        .then(bug => {
+            const isOwner = bug.creator._id === loggedinUser._id
+            const isAdmin = loggedinUser.isAdmin
+
+            if (!isOwner && !isAdmin) {
+                return Promise.reject('Not authorized: You can only delete your own bugs')
+            }
+
+            return bugService.remove(bugId)
         })
+        .then(() => res.send('Deleted successfully'))
         .catch(err => {
-            res.status(400).send('Cannot get bug')
+            console.log('Error:', err)
+            // If the error is our 'Not authorized' string, send 403
+            if (err === 'Not authorized') {
+                return res.status(403).send(err)
+            }
+            res.status(400).send(err || 'Cannot remove bug')
         })
 })
 
@@ -175,6 +202,23 @@ app.get('/api/user/:userId', (req, res) => {
             loggerService.error('Cannot load user', err)
             res.status(400).send('Cannot load user')
         })
+})
+
+app.delete('/api/user/:userId', (req, res) => {
+    const loggedinUser = authService.validateToken(req.cookies.loginToken)
+    if (!loggedinUser || !loggedinUser.isAdmin) {
+        return res.status(403).send('Admin clearance required')
+    }
+
+    const { userId } = req.params
+
+    if (loggedinUser._id === userId) {
+        return res.status(400).send('You cannot delete yourself')
+    }
+
+    userService.remove(userId)
+        .then(() => res.send('User removed'))
+        .catch(err => res.status(400).send('Cannot remove user'))
 })
 
 app.listen(5501, () => console.log('Server ready at port http://127.0.0.1:5501'))

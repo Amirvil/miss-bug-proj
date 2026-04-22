@@ -31,6 +31,8 @@ export function BugDetails() {
                 <div className="labels">
                     Labels: {(bug.labels && bug.labels.length) ? bug.labels.join(', ') : 'None'}
                 </div>
+
+                <p className="createdBy">Created By: <span>{bug.creator.fullname}</span></p>
             </div>
         }
         <button><Link to="/bug">Back to List</Link></button>
